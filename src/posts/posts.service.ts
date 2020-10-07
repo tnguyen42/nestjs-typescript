@@ -14,7 +14,7 @@ export default class PostService {
 	) {}
 
 	getAllPosts() {
-		return this.postsRepository;
+		return this.postsRepository.find();
 	}
 
 	async getPostById(id: number) {
