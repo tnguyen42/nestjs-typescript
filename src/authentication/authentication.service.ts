@@ -32,10 +32,7 @@ export class AuthenticationService {
 		}
 	}
 
-	public async getAuthentificatedUser(
-		email: string,
-		plainTextPassword: string,
-	) {
+	public async getAuthenticatedUser(email: string, plainTextPassword: string) {
 		try {
 			const user = await this.usersService.getByEmail(email);
 			await this.verifyPassword(plainTextPassword, user.password);
