@@ -5,7 +5,7 @@ import * as bcrypt from "bcrypt";
 import { PostgresErrorCode } from "../database/postgresErrorCode.enum";
 
 @Injectable()
-export class AuthentificationService {
+export class AuthenticationService {
 	constructor(private readonly usersService: UsersService) {}
 
 	public async register(registrationData: RegisterDto) {
