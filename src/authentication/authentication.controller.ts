@@ -5,7 +5,8 @@ import {
 	HttpCode,
 	Post,
 	UseGuards,
-	Res,, Get
+	Res,
+	Get,
 } from "@nestjs/common";
 import { Response } from "express";
 import { AuthenticationService } from "./authentication.service";
