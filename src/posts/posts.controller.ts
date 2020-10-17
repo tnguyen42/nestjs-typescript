@@ -11,7 +11,7 @@ import {
 	Put,
 	UseGuards,
 } from "@nestjs/common";
-import JwtAuthenticationGuard from "../authentication/jwt-authentication.guard";
+import { JwtAuthenticationGuard } from "../authentication/jwt-authentication.guard";
 
 @Controller("posts")
 export default class PostsController {
