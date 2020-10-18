@@ -18,6 +18,7 @@ import { join } from "path";
 				entities: [join(__dirname, "**", "*.entity.{ts,js}")],
 				autoLoadEntities: true,
 				synchronize: true,
+				keepConnectionAlive: true,
 			}),
 		}),
 	],
