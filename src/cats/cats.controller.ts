@@ -1,10 +1,11 @@
-import { Body, Controller, Get, Param, Post } from "@nestjs/common";
-import { CreateCatDto } from "./create-cat.dto";
+import { Controller, Get, Param, Post } from "@nestjs/common";
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags("cats")
 @Controller({ path: "cats" })
 export class CatsController {
 	@Post()
-	async create(@Body() createCatDto: CreateCatDto) {
+	async create() {
 		return "This action adds a new cat";
 	}
 

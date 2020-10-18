@@ -14,7 +14,10 @@ import {
 } from "@nestjs/common";
 import { JwtAuthenticationGuard } from "../authentication/jwt-authentication.guard";
 import { ExceptionsLoggerFilter } from "../utils/exceptionsLogger.filter";
+import { FindOneParams } from "../utils/findOneParams";
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags("posts")
 @Controller("posts")
 export default class PostsController {
 	constructor(private readonly postsService: PostsService) {}
@@ -26,6 +29,7 @@ export default class PostsController {
 
 	@Get(":id")
 	@UseFilters(ExceptionsLoggerFilter)
+	// One way
 	getPostById(@Param("id") id: string) {
 		return this.postsService.getPostById(Number(id));
 	}
@@ -37,12 +41,16 @@ export default class PostsController {
 	}
 
 	@Put(":id")
-	async replacePost(@Param("id") id: string, @Body() post: UpdatePostDto) {
+	async replacePost(
+		@Param() { id }: FindOneParams,
+		@Body() post: UpdatePostDto,
+	) {
 		return this.postsService.replacePost(Number(id), post);
 	}
 
 	@Delete(":id")
-	async deletePost(@Param("id") id: string) {
+	// Another way
+	async deletePost(@Param() { id }: FindOneParams) {
 		this.postsService.deletePost(Number(id));
 	}
 }
