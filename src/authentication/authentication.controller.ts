@@ -5,12 +5,10 @@ import {
 	HttpCode,
 	Post,
 	UseGuards,
-	Res,
 	Get,
 	UseInterceptors,
 	ClassSerializerInterceptor,
 } from "@nestjs/common";
-import { Response } from "express";
 import { AuthenticationService } from "./authentication.service";
 import RegisterDto from "../users/dto/register.dto";
 import RequestWithUser from "./requestWithUser.interface";

@@ -1,5 +1,12 @@
+import {
+	Column,
+	Entity,
+	PrimaryGeneratedColumn,
+	JoinColumn,
+	OneToOne,
+} from "typeorm";
 import { Exclude } from "class-transformer";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import Address from "./address.entity";
 
 @Entity()
 class User {
@@ -16,5 +23,10 @@ class User {
 	@Column()
 	@Exclude()
 	public password: string;
+
+	@OneToOne(() => Address)
+	@JoinColumn()
+	public address: Address;
 }
+
 export default User;
