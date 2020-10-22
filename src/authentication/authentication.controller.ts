@@ -16,6 +16,9 @@ import { LocalAuthenticationGuard } from "./localAuthentication.guard";
 import { JwtAuthenticationGuard } from "./jwt-authentication.guard";
 import { ApiTags } from "@nestjs/swagger";
 
+import Address from "../users/address.entity";
+import User from "../users/user.entity";
+
 @ApiTags("authentication")
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller("authentication")
@@ -24,20 +27,20 @@ export class AuthenticationController {
 
 	@UseGuards(JwtAuthenticationGuard)
 	@Get()
-	authenticate(@Req() request: RequestWithUser) {
+	async authenticate(@Req() request: RequestWithUser): Promise<User> {
 		const user = request.user;
 		return user;
 	}
 
 	@Post("register")
-	async register(@Body() registrationData: RegisterDto) {
+	async register(@Body() registrationData: RegisterDto): Promise<User> {
 		return this.authenticationService.register(registrationData);
 	}
 
 	@HttpCode(200)
 	@UseGuards(LocalAuthenticationGuard)
 	@Post("log-in")
-	async logIn(@Req() request: RequestWithUser) {
+	async logIn(@Req() request: RequestWithUser): Promise<User> {
 		const { user } = request;
 		const cookie = this.authenticationService.getCookieWithJwtToken(user.id);
 		request.res.setHeader("Set-Cookie", cookie);
@@ -51,5 +54,10 @@ export class AuthenticationController {
 			"Set-Cookie",
 			this.authenticationService.getCookieForLogOut(),
 		);
+	}
+
+	@Get("addresses")
+	async getAllAddressesWithUsers(): Promise<Address[]> {
+		return this.authenticationService.getAllAddressesWithUsers();
 	}
 }

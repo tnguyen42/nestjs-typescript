@@ -1,4 +1,6 @@
 import { Module } from "@nestjs/common";
+import { TypeOrmModule } from "@nestjs/typeorm";
+
 import { AuthenticationService } from "./authentication.service";
 import { UsersModule } from "../users/users.module";
 import { AuthenticationController } from "./authentication.controller";
@@ -9,11 +11,14 @@ import { JwtStrategy } from "./jwt.strategy";
 import { JwtModule } from "@nestjs/jwt";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 
+import Address from "../users/address.entity";
+
 @Module({
 	imports: [
 		UsersModule,
 		PassportModule,
 		ConfigModule,
+		TypeOrmModule.forFeature([Address]),
 		JwtModule.registerAsync({
 			imports: [ConfigModule],
 			inject: [ConfigService],

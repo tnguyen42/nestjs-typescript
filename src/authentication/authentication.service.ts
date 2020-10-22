@@ -8,15 +8,23 @@ import { JwtService } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
 import { TokenPayload } from "./tokenPayload.interface";
 
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+
+import Address from "../users/address.entity";
+import User from "../users/user.entity";
+
 @Injectable()
 export class AuthenticationService {
 	constructor(
 		private readonly usersService: UsersService,
 		private readonly jwtService: JwtService,
 		private readonly configService: ConfigService,
+		@InjectRepository(Address)
+		private addressRepository: Repository<Address>,
 	) {}
 
-	public async register(registrationData: RegisterDto) {
+	public async register(registrationData: RegisterDto): Promise<User> {
 		const hashedPassword = await bcrypt.hash(registrationData.password, 10);
 
 		try {
@@ -24,7 +32,6 @@ export class AuthenticationService {
 				...registrationData,
 				password: hashedPassword,
 			});
-			createdUser.password = undefined;
 			return createdUser;
 		} catch (error) {
 			if (error?.code === PostgresErrorCode.UniqueViolation) {
@@ -40,7 +47,10 @@ export class AuthenticationService {
 		}
 	}
 
-	public async getAuthenticatedUser(email: string, plainTextPassword: string) {
+	public async getAuthenticatedUser(
+		email: string,
+		plainTextPassword: string,
+	): Promise<User> {
 		try {
 			const user = await this.usersService.getByEmail(email);
 			await this.verifyPassword(plainTextPassword, user.password);
@@ -70,7 +80,7 @@ export class AuthenticationService {
 		}
 	}
 
-	public getCookieWithJwtToken(userId: number) {
+	public getCookieWithJwtToken(userId: number): string {
 		const payload: TokenPayload = { userId };
 		const token = this.jwtService.sign(payload, {
 			secret: this.configService.get("JWT_SECRET"),
@@ -81,7 +91,11 @@ export class AuthenticationService {
 		)}`;
 	}
 
-	public getCookieForLogOut() {
+	public getCookieForLogOut(): string {
 		return `Authentication=; HttpOnly; Path=/; Max-Age: 0`;
+	}
+
+	public getAllAddressesWithUsers(): Promise<Address[]> {
+		return this.addressRepository.find({ relations: ["user"] });
 	}
 }

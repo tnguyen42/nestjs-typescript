@@ -1,7 +1,8 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import User from "src/users/user.entity";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
-export class PostEntity {
+class PostEntity {
 	@PrimaryGeneratedColumn()
 	public id: number;
 
@@ -10,4 +11,12 @@ export class PostEntity {
 
 	@Column()
 	public content: string;
+
+	@Column({ nullable: true })
+	public category?: string;
+
+	@ManyToOne(() => User, (author: User) => author.posts)
+	public author: User;
 }
+
+export default PostEntity;

@@ -11,11 +11,13 @@ import {
 	Put,
 	UseFilters,
 	UseGuards,
+	Req,
 } from "@nestjs/common";
 import { JwtAuthenticationGuard } from "../authentication/jwt-authentication.guard";
 import { ExceptionsLoggerFilter } from "../utils/exceptionsLogger.filter";
 import { FindOneParams } from "../utils/findOneParams";
 import { ApiTags } from "@nestjs/swagger";
+import RequestWithUser from "../authentication/requestWithUser.interface";
 
 @ApiTags("posts")
 @Controller("posts")
@@ -36,8 +38,8 @@ export default class PostsController {
 
 	@Post()
 	@UseGuards(JwtAuthenticationGuard)
-	async createPost(@Body() post: CreatePostDto) {
-		return this.postsService.createPost(post);
+	async createPost(@Body() post: CreatePostDto, @Req() req: RequestWithUser) {
+		return this.postsService.createPost(post, req.user);
 	}
 
 	@Put(":id")
