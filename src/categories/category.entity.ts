@@ -1,4 +1,3 @@
-import { Post } from "@nestjs/common";
 import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 import PostEntity from "../posts/post.entity";
 
