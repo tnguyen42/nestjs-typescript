@@ -1,9 +1,11 @@
 import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Exclude } from "class-transformer";
 import User from "./user.entity";
 
 @Entity()
 class Address {
 	@PrimaryGeneratedColumn()
+	@Exclude()
 	public id: number;
 
 	@Column()
@@ -16,7 +18,7 @@ class Address {
 	public country: string;
 
 	@OneToOne(() => User, (user: User) => user.address)
-	public user: User;
+	public user?: User;
 }
 
 export default Address;
