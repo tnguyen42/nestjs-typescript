@@ -16,14 +16,15 @@ describe("Then AuthenticationService", () => {
 	let usersService: UsersService;
 	let bcryptCompare: jest.Mock;
 	let findUser: jest.Mock;
-
-	const userData: User = {
-		...mockedUser,
-	};
+	let userData: User;
 
 	beforeEach(async () => {
 		bcryptCompare = jest.fn().mockReturnValue(true);
 		(bcrypt.compare as jest.Mock) = bcryptCompare;
+
+		userData = {
+			...mockedUser,
+		};
 
 		findUser = jest.fn().mockResolvedValue(userData);
 		const usersRepository = {
