@@ -12,6 +12,10 @@ import Post from "../posts/post.entity";
 
 @Entity()
 class User {
+	constructor(obj?: Partial<User>) {
+        Object.assign(this, obj);
+    }
+
 	@PrimaryGeneratedColumn()
 	@Exclude()
 	public id?: number;

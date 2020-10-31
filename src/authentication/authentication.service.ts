@@ -32,7 +32,10 @@ export class AuthenticationService {
 				...registrationData,
 				password: hashedPassword,
 			});
-			return createdUser;
+
+			// TypeORM creates an object that looks like the class, but isn't an instance of the class. Because of this, the metadata that gets set isn't actually there. Thus, the @Exclude() never takes affect.
+			const returnedUser = new User(createdUser);
+			return returnedUser;
 		} catch (error) {
 			if (error?.code === PostgresErrorCode.UniqueViolation) {
 				throw new HttpException(
