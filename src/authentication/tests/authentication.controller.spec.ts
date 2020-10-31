@@ -26,7 +26,8 @@ describe("The AuthenticationController", () => {
 		};
 
 		const userRepository = {
-			create: jest.fn().mockResolvedValue(userData),
+			// The mock should return a new instance of the class here, because jest will just return an object that looks like a class but is not - and therefore will skip the @Exclude decorators
+			create: jest.fn().mockResolvedValue(new User(userData)),
 			save: jest.fn().mockReturnValue(Promise.resolve()),
 		};
 

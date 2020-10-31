@@ -12,9 +12,10 @@ import Post from "../posts/post.entity";
 
 @Entity()
 class User {
+	// This constructor is made for e2e tests, so these can return an instance of a class with given user data inside
 	constructor(obj?: Partial<User>) {
-        Object.assign(this, obj);
-    }
+		Object.assign(this, obj);
+	}
 
 	@PrimaryGeneratedColumn()
 	@Exclude()
