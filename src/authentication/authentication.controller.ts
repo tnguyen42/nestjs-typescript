@@ -5,9 +5,7 @@ import {
 	HttpCode,
 	Post,
 	UseGuards,
-	Get,
-	UseInterceptors,
-	ClassSerializerInterceptor,
+	Get
 } from "@nestjs/common";
 import { AuthenticationService } from "./authentication.service";
 import RegisterDto from "../users/dto/register.dto";
@@ -20,7 +18,6 @@ import Address from "../users/address.entity";
 import User from "../users/user.entity";
 
 @ApiTags("authentication")
-@UseInterceptors(ClassSerializerInterceptor)
 @Controller("authentication")
 export class AuthenticationController {
 	constructor(private readonly authenticationService: AuthenticationService) {}

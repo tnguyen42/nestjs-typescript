@@ -1,7 +1,13 @@
-import { INestApplication, ValidationPipe } from "@nestjs/common";
-import User from "src/users/user.entity";
-import mockedUser from "src/users/tests/user.mock";
+import { INestApplication, ClassSerializerInterceptor, ValidationPipe } from "@nestjs/common";
+import { Reflector } from "@nestjs/core";
+
 import { Test } from "@nestjs/testing";
+import * as request from "supertest";
+import { getRepositoryToken } from "@nestjs/typeorm";
+
+import User from "src/users/user.entity";
+import Address from "src/users/address.entity";
+import mockedUser from "src/users/tests/user.mock";
 import { AuthenticationController } from "../authentication.controller";
 import { ConfigService } from "@nestjs/config";
 import { AuthenticationService } from "../authentication.service";
@@ -9,8 +15,6 @@ import { UsersService } from "src/users/users.service";
 import mockedConfigService from "src/utils/mocks/config.service";
 import mockedJwtService from "src/utils/mocks/jwt.service";
 import { JwtService } from "@nestjs/jwt";
-import { getRepositoryToken } from "@nestjs/typeorm";
-import * as request from "supertest";
 
 describe("The AuthenticationController", () => {
 	let app: INestApplication;
@@ -43,21 +47,28 @@ describe("The AuthenticationController", () => {
 					provide: getRepositoryToken(User),
 					useValue: userRepository,
 				},
+				{
+					provide: getRepositoryToken(Address),
+					useValue: {},
+				}
 			],
 		}).compile();
 
 		app = module.createNestApplication();
-		app.useGlobalPipes(new ValidationPipe());
+		app.useGlobalPipes(new ValidationPipe()); // enables class-transform decorators (for validation) @IsString, @MaxLength etc. to work everywhere
+		app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector))); // not working - @Exclude not working in the entities during the tests
 		await app.init();
 	});
 
 	describe("when registering", () => {
 		describe("and using valid data", () => {
-			it("should respond with the data of the user without the password", () => {
+			it("should respond with the data of the user without the password and ids", () => {
 				const expectedData = {
 					...userData,
 				};
 				delete expectedData.password;
+				delete expectedData.id;
+				delete expectedData.address.id;
 
 				return request(app.getHttpServer())
 					.post("/authentication/register")
@@ -70,5 +81,13 @@ describe("The AuthenticationController", () => {
 					.expect(expectedData);
 			});
 		});
+
+		describe("and using invalid data", () => {
+			it("should throw an error", () => {
+				return request(app.getHttpServer()).post("/authentication/register").send({
+					name: mockedUser.name
+				}).expect(400);
+			})
+		})
 	});
 });
