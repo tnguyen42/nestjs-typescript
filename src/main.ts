@@ -4,6 +4,9 @@ import { AppModule } from "./app.module";
 import * as cookieParser from "cookie-parser";
 import { ClassSerializerInterceptor, ValidationPipe } from "@nestjs/common";
 
+import { ConfigService } from "@nestjs/config";
+import { config } from "aws-sdk";
+
 declare const module: any;
 
 async function bootstrap() {
@@ -20,6 +23,15 @@ async function bootstrap() {
 	app.useGlobalPipes(new ValidationPipe()); // enables class-transform decorators (for validation) @IsString, @MaxLength etc. to work everywhere
 	app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector))); // enables class-transform decorators (for serialization) @Exclude, @Expose, @Transform, @SerializeOptions to work everywhere
 	app.use(cookieParser());
+
+	// AWS configuration
+	const configService = app.get(ConfigService);
+	config.update({
+		accessKeyId: configService.get("AWS_ACCESS_KEY_ID"),
+		secretAccessKey: configService.get("AWS_SECRET_ACCESS_KEY"),
+		region: configService.get("AWS_REGION")
+	})
+
 	await app.listen(3000);
 
 	if (module.hot) {
@@ -27,4 +39,5 @@ async function bootstrap() {
 		module.hot.dispose(() => app.close());
 	}
 }
+
 bootstrap();
