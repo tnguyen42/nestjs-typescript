@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import User from "../users/user.entity"
 
 @Entity()
 class PublicFile {
@@ -10,6 +11,9 @@ class PublicFile {
 
 	@Column()
 	public key: string;
+
+	@OneToOne(() => User)
+	public user: User;
 }
 
 export default PublicFile;
