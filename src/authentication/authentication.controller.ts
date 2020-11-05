@@ -12,10 +12,11 @@ import RegisterDto from "../users/dto/register.dto";
 import RequestWithUser from "./requestWithUser.interface";
 import { LocalAuthenticationGuard } from "./localAuthentication.guard";
 import { JwtAuthenticationGuard } from "./jwt-authentication.guard";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiTags } from "@nestjs/swagger";
 
 import Address from "../users/address.entity";
 import User from "../users/user.entity";
+import LoginDto from "../users/dto/login.dto";
 
 @ApiTags("authentication")
 @Controller("authentication")
@@ -36,6 +37,7 @@ export class AuthenticationController {
 
 	@HttpCode(200)
 	@UseGuards(LocalAuthenticationGuard)
+	@ApiBody({ type: LoginDto }) // Customize Swagger params
 	@Post("log-in")
 	async logIn(@Req() request: RequestWithUser): Promise<User> {
 		const { user } = request;

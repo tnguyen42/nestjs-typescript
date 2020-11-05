@@ -12,16 +12,19 @@ declare const module: any;
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
 
+	// Add an if on process.env to remove Swagger online
 	const options = new DocumentBuilder()
 		.setTitle("Cats example")
 		.setDescription("The cats API description")
 		.setVersion("1.0")
+		// .addBearerAuth() // for session jwt tokens
+		.addCookieAuth("Authentication")
 		.build();
 	const document = SwaggerModule.createDocument(app, options);
 	SwaggerModule.setup("api", app, document);
 
 	app.useGlobalPipes(new ValidationPipe()); // enables class-transform decorators (for validation) @IsString, @MaxLength etc. to work everywhere
-	app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector))); // enables class-transform decorators (for serialization) @Exclude, @Expose, @Transform, @SerializeOptions to work everywhere
+	app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector))); // enables class-transform decorators (for serialization) @Exclude, @Expose, @Transform, @SerializeOptions to work everywhere - won't work for tests
 	app.use(cookieParser());
 
 	// AWS configuration

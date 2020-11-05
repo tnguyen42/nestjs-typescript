@@ -1,6 +1,5 @@
 import {
 	Controller,
-	Get,
 	Post,
 	Req,
 	UploadedFile,
@@ -12,7 +11,11 @@ import { JwtAuthenticationGuard } from "src/authentication/jwt-authentication.gu
 import { FileInterceptor } from "@nestjs/platform-express";
 import { UsersService } from "./users.service";
 import RequestWithUser from "src/authentication/requestWithUser.interface";
+import { ApiBody, ApiTags } from "@nestjs/swagger";
 
+import UploadFileDto from "./dto/uploadFile.dto";
+
+@ApiTags("users")
 @Controller("users")
 export class UsersController {
 	constructor(private readonly usersService: UsersService) {}
@@ -20,6 +23,7 @@ export class UsersController {
 	@Post("avatar")
 	@UseGuards(JwtAuthenticationGuard)
 	@UseInterceptors(FileInterceptor("file"))
+	@ApiBody({ type: UploadFileDto })
 	async addAvatar(
 		@Req() request: RequestWithUser,
 		@UploadedFile() file: Express.Multer.File,
@@ -33,10 +37,4 @@ export class UsersController {
 			file.originalname,
 		);
 	}
-
-	// TODO: remove this
-	// @Get("test")
-	// async printHello() {
-	// 	console.log("Hello");
-	// }
 }

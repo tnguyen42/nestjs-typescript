@@ -14,6 +14,9 @@ import CategoriesService from "./categories.service";
 import FindOneParams from "../utils/findOneParams";
 import UpdateCategoryDto from "./dto/updateCategory.dto";
 
+import { ApiBody, ApiTags } from "@nestjs/swagger";
+
+@ApiTags("categories")
 @Controller("categories")
 @UseInterceptors(ClassSerializerInterceptor)
 export default class CategoriesController {
