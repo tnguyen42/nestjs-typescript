@@ -86,7 +86,11 @@ export class AuthenticationService {
 			secret: this.configService.get("JWT_SECRET"),
 			expiresIn: `${this.configService.get("JWT_EXPIRATION_TIME")}s`,
 		});
-		return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get(
+		// TODO: uncomment next line
+		// return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get(
+		// 	"JWT_EXPIRATION_TIME",
+		// )}`;
+		return `Authentication=${token}; Path=/; Max-Age=${this.configService.get(
 			"JWT_EXPIRATION_TIME",
 		)}`;
 	}

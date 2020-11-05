@@ -27,7 +27,7 @@ import { UsersModule } from "src/users/users.module";
 			}),
 		}),
 		DatabaseModule,
-		UsersModule
+		UsersModule,
 	],
 	controllers: [],
 	providers: [],

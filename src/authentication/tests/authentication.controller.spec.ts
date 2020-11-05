@@ -1,4 +1,8 @@
-import { INestApplication, ClassSerializerInterceptor, ValidationPipe } from "@nestjs/common";
+import {
+	INestApplication,
+	ClassSerializerInterceptor,
+	ValidationPipe,
+} from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 
 import { Test } from "@nestjs/testing";
@@ -51,13 +55,15 @@ describe("The AuthenticationController", () => {
 				{
 					provide: getRepositoryToken(Address),
 					useValue: {},
-				}
+				},
 			],
 		}).compile();
 
 		app = module.createNestApplication();
 		app.useGlobalPipes(new ValidationPipe()); // enables class-transform decorators (for validation) @IsString, @MaxLength etc. to work everywhere
-		app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector))); // not working - @Exclude not working in the entities during the tests
+		app.useGlobalInterceptors(
+			new ClassSerializerInterceptor(app.get(Reflector)),
+		); // not working - @Exclude not working in the entities during the tests
 		await app.init();
 	});
 
@@ -85,10 +91,13 @@ describe("The AuthenticationController", () => {
 
 		describe("and using invalid data", () => {
 			it("should throw an error", () => {
-				return request(app.getHttpServer()).post("/authentication/register").send({
-					name: mockedUser.name
-				}).expect(400);
-			})
-		})
+				return request(app.getHttpServer())
+					.post("/authentication/register")
+					.send({
+						name: mockedUser.name,
+					})
+					.expect(400);
+			});
+		});
 	});
 });

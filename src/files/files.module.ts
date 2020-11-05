@@ -5,11 +5,8 @@ import { ConfigModule } from "@nestjs/config";
 import PublicFile from "./publicFile.entity";
 
 @Module({
-	imports: [
-		TypeOrmModule.forFeature([PublicFile]),
-		ConfigModule,
-	],
+	imports: [TypeOrmModule.forFeature([PublicFile]), ConfigModule],
 	providers: [FilesService],
-	exports: [FilesService]
+	exports: [FilesService],
 })
-export class FilesModule { }
+export class FilesModule {}

@@ -10,7 +10,7 @@ export class UsersService {
 	constructor(
 		@InjectRepository(User)
 		private usersRepository: Repository<User>,
-		private readonly filesService: FilesService
+		private readonly filesService: FilesService,
 	) {}
 
 	async getByEmail(email: string) {
@@ -47,15 +47,18 @@ export class UsersService {
 		if (fileId) {
 			await this.usersRepository.update(userId, {
 				...user,
-				avatar: null
-			})
+				avatar: null,
+			});
 		}
 		await this.filesService.deletePublicFile(fileId);
 
-		const avatar = await this.filesService.uploadPublicFile(imageBuffer, filename);
+		const avatar = await this.filesService.uploadPublicFile(
+			imageBuffer,
+			filename,
+		);
 		await this.usersRepository.update(userId, {
 			...user,
-			avatar
+			avatar,
 		});
 		return avatar;
 	}
@@ -66,8 +69,8 @@ export class UsersService {
 		if (fileId) {
 			await this.usersRepository.update(userId, {
 				...user,
-				avatar: null
-			})
+				avatar: null,
+			});
 		}
 		await this.filesService.deletePublicFile(fileId);
 	}

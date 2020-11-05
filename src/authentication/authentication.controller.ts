@@ -5,7 +5,7 @@ import {
 	HttpCode,
 	Post,
 	UseGuards,
-	Get
+	Get,
 } from "@nestjs/common";
 import { AuthenticationService } from "./authentication.service";
 import RegisterDto from "../users/dto/register.dto";
