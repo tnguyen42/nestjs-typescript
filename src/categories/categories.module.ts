@@ -10,4 +10,4 @@ import CategoriesService from "./categories.service";
 	controllers: [CategoriesController],
 	providers: [CategoriesService],
 })
-export class PostModule {}
+export class CategoriesModule {}

@@ -28,8 +28,6 @@ export class UsersController {
 		@Req() request: RequestWithUser,
 		@UploadedFile() file: Express.Multer.File,
 	) {
-		// TODO: Issue probably probably come from the guard
-		console.log("File upload");
 		// Use file.mimetype to use conditions on the type of file
 		return this.usersService.addAvatar(
 			request.user.id,

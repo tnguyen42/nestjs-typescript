@@ -6,6 +6,7 @@ import { ConfigModule } from "@nestjs/config";
 import * as Joi from "@hapi/joi";
 import { DatabaseModule } from "./database/database.module";
 import { UsersModule } from "src/users/users.module";
+import { CategoriesModule } from "src/categories/categories.module";
 
 @Module({
 	imports: [
@@ -28,6 +29,7 @@ import { UsersModule } from "src/users/users.module";
 		}),
 		DatabaseModule,
 		UsersModule,
+		CategoriesModule,
 	],
 	controllers: [],
 	providers: [],
