@@ -11,9 +11,6 @@ class PublicFile {
 
 	@Column()
 	public key: string;
-
-	// @OneToOne(() => User)
-	// public user: User;
 }
 
 export default PublicFile;

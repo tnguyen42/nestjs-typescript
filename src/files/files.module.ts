@@ -1,7 +1,8 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { FilesService } from "./files.service";
 import { ConfigModule } from "@nestjs/config";
+
+import { FilesService } from "./files.service";
 import PublicFile from "./publicFile.entity";
 
 @Module({
