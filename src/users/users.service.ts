@@ -48,13 +48,11 @@ export class UsersService {
 		const fileId = user.avatar?.id;
 
 		if (fileId) {
-			console.log("Deleting avatar in usersRepository");
 			await this.usersRepository.update(userId, {
 				...user,
 				avatar: null,
 			});
 			await this.filesService.deletePublicFile(fileId);
-			console.log("Deleted successfully");
 		}
 
 		const avatar = await this.filesService.uploadPublicFile(

@@ -6,7 +6,6 @@ import * as Joi from "@hapi/joi";
 import { DatabaseModule } from "./database/database.module";
 import { UsersModule } from "src/users/users.module";
 import { CategoriesModule } from "src/categories/categories.module";
-import { PrivateFilesModule } from "./privateFiles/privateFiles.module";
 
 @Module({
 	imports: [
