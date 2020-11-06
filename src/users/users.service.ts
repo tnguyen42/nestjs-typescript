@@ -77,8 +77,8 @@ export class UsersService {
 				...user,
 				avatar: null,
 			});
+			await this.filesService.deletePublicFile(fileId);
 		}
-		await this.filesService.deletePublicFile(fileId);
 	}
 
 	async addPrivateFile(userId: number, imageBuffer: Buffer, filename: string) {
