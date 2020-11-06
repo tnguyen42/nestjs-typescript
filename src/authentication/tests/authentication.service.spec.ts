@@ -10,6 +10,12 @@ import * as bcrypt from "bcrypt";
 import User from "../../users/user.entity";
 import Address from "../../users/address.entity";
 import mockedUser from "../../users/tests/user.mock";
+import { FilesService } from "src/files/files.service";
+import { PrivateFilesService } from "src/privateFiles/privateFiles.service";
+
+import PrivateFile from "src/privateFiles/privateFile.entity";
+import PublicFile from "src/files/publicFile.entity";
+import Category from "src/categories/category.entity";
 
 describe("Then AuthenticationService", () => {
 	let authenticationService: AuthenticationService;
@@ -35,6 +41,8 @@ describe("Then AuthenticationService", () => {
 			providers: [
 				UsersService,
 				AuthenticationService,
+				FilesService,
+				PrivateFilesService,
 				{
 					provide: ConfigService,
 					useValue: mockedConfigService,
@@ -51,8 +59,22 @@ describe("Then AuthenticationService", () => {
 					provide: getRepositoryToken(Address),
 					useValue: {},
 				},
+				{
+					provide: getRepositoryToken(Category),
+					useValue: {},
+				},
+				{
+					provide: getRepositoryToken(PublicFile),
+					useValue: {},
+				},
+				{
+					provide: getRepositoryToken(PrivateFile),
+					useValue: {},
+				},
 			],
 		}).compile();
+
+		// modules to be used in the tests
 		authenticationService = await module.get(AuthenticationService);
 		usersService = await module.get(UsersService);
 	});

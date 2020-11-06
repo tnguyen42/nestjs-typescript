@@ -1,7 +1,16 @@
 import { Test } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
-import User from "../user.entity";
+
+import { ConfigService } from "@nestjs/config";
+import mockedConfigService from "src/utils/mocks/config.service";
+
+import { FilesService } from "src/files/files.service";
+import { PrivateFilesService } from "src/privateFiles/privateFiles.service";
 import { UsersService } from "../users.service";
+
+import User from "../user.entity";
+import PrivateFile from "src/privateFiles/privateFile.entity";
+import PublicFile from "src/files/publicFile.entity";
 
 describe("The UsersService", () => {
 	let usersService: UsersService;
@@ -12,11 +21,25 @@ describe("The UsersService", () => {
 		const module = await Test.createTestingModule({
 			providers: [
 				UsersService,
+				FilesService,
+				PrivateFilesService,
+				{
+					provide: ConfigService,
+					useValue: mockedConfigService,
+				},
 				{
 					provide: getRepositoryToken(User),
 					useValue: {
 						findOne,
 					},
+				},
+				{
+					provide: getRepositoryToken(PublicFile),
+					useValue: {},
+				},
+				{
+					provide: getRepositoryToken(PrivateFile),
+					useValue: {},
 				},
 			],
 		}).compile();

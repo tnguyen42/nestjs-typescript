@@ -4,21 +4,28 @@ import {
 	ValidationPipe,
 } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
-
 import { Test } from "@nestjs/testing";
+import { JwtService } from "@nestjs/jwt";
 import * as request from "supertest";
 import { getRepositoryToken } from "@nestjs/typeorm";
 
-import User from "src/users/user.entity";
-import Address from "src/users/address.entity";
-import mockedUser from "src/users/tests/user.mock";
 import { AuthenticationController } from "../authentication.controller";
+
 import { ConfigService } from "@nestjs/config";
 import { AuthenticationService } from "../authentication.service";
 import { UsersService } from "src/users/users.service";
 import mockedConfigService from "src/utils/mocks/config.service";
 import mockedJwtService from "src/utils/mocks/jwt.service";
-import { JwtService } from "@nestjs/jwt";
+import { FilesService } from "src/files/files.service";
+import { PrivateFilesService } from "src/privateFiles/privateFiles.service";
+
+import User from "src/users/user.entity";
+import Address from "src/users/address.entity";
+import PrivateFile from "src/privateFiles/privateFile.entity";
+import PublicFile from "src/files/publicFile.entity";
+import Category from "src/categories/category.entity";
+
+import mockedUser from "src/users/tests/user.mock";
 
 describe("The AuthenticationController", () => {
 	let app: INestApplication;
@@ -40,6 +47,8 @@ describe("The AuthenticationController", () => {
 			providers: [
 				UsersService,
 				AuthenticationService,
+				FilesService,
+				PrivateFilesService,
 				{
 					provide: ConfigService,
 					useValue: mockedConfigService,
@@ -54,6 +63,18 @@ describe("The AuthenticationController", () => {
 				},
 				{
 					provide: getRepositoryToken(Address),
+					useValue: {},
+				},
+				{
+					provide: getRepositoryToken(Category),
+					useValue: {},
+				},
+				{
+					provide: getRepositoryToken(PublicFile),
+					useValue: {},
+				},
+				{
+					provide: getRepositoryToken(PrivateFile),
 					useValue: {},
 				},
 			],
