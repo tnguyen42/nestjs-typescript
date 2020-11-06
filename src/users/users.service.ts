@@ -46,13 +46,16 @@ export class UsersService {
 	async addAvatar(userId: number, imageBuffer: Buffer, filename: string) {
 		const user = await this.getById(userId);
 		const fileId = user.avatar?.id;
+
 		if (fileId) {
+			console.log("Deleting avatar in usersRepository");
 			await this.usersRepository.update(userId, {
 				...user,
 				avatar: null,
 			});
+			await this.filesService.deletePublicFile(fileId);
+			console.log("Deleted successfully");
 		}
-		await this.filesService.deletePublicFile(fileId);
 
 		const avatar = await this.filesService.uploadPublicFile(
 			imageBuffer,
@@ -62,6 +65,7 @@ export class UsersService {
 			...user,
 			avatar,
 		});
+
 		return avatar;
 	}
 
