@@ -6,6 +6,9 @@ import {
 	UploadedFile,
 	UseGuards,
 	UseInterceptors,
+	Get,
+	Param,
+	Res,
 } from "@nestjs/common";
 
 import { JwtAuthenticationGuard } from "src/authentication/jwt-authentication.guard";
@@ -15,6 +18,9 @@ import RequestWithUser from "src/authentication/requestWithUser.interface";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 
 import UploadFileDto from "./dto/uploadFile.dto";
+import FindOneParams from "src/utils/findOneParams";
+
+import { Writable } from "stream";
 
 @ApiTags("users")
 @Controller("users")
@@ -55,5 +61,26 @@ export class UsersController {
 			file.buffer,
 			file.originalname,
 		);
+	}
+
+	@Get("files/:id")
+	@UseGuards(JwtAuthenticationGuard)
+	public async getPrivateFile(
+		@Req() request: RequestWithUser,
+		@Param() { id }: FindOneParams,
+		@Res() res: Writable,
+	) {
+		const file = await this.usersService.getPrivateFile(
+			request.user.id,
+			Number(id),
+		);
+
+		file.stream.pipe(res);
+	}
+
+	@Get("files")
+	@UseGuards(JwtAuthenticationGuard)
+	async getAllPrivateFiles(@Req() request: RequestWithUser) {
+		return this.usersService.getAllPrivateFiles(request.user.id);
 	}
 }
