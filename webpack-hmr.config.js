@@ -19,5 +19,8 @@ module.exports = function (options) {
 			new webpack.WatchIgnorePlugin([/\.js$/, /\.d\.ts$/]),
 			new StartServerPlugin({ name: options.output.filename }),
 		],
+		optimization: {
+			namedModules: true,
+		},
 	};
 };
