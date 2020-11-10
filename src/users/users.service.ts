@@ -8,20 +8,22 @@ import {
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import User from "./user.entity";
+import PublicFile from "src/files/publicFile.entity";
+import PrivateFile from "src/privateFiles/privateFile.entity";
 import RegisterDto from "src/users/dto/register.dto";
 import { FilesService } from "src/files/files.service";
 import { PrivateFilesService } from "src/privateFiles/privateFiles.service";
 
 @Injectable()
 export class UsersService {
-	constructor(
+	public constructor(
 		@InjectRepository(User)
 		private usersRepository: Repository<User>,
 		private readonly filesService: FilesService,
 		private readonly privateFilesService: PrivateFilesService,
 	) {}
 
-	async getByEmail(email: string) {
+	public async getByEmail(email: string): Promise<User> {
 		const user = await this.usersRepository.findOne({ email });
 		if (user) {
 			return user;
@@ -32,7 +34,7 @@ export class UsersService {
 		);
 	}
 
-	async getById(id: number) {
+	public async getById(id: number): Promise<User> {
 		const user = await this.usersRepository.findOne({ id });
 		if (user) {
 			return user;
@@ -43,15 +45,19 @@ export class UsersService {
 		);
 	}
 
-	async create(userData: RegisterDto) {
+	public async create(userData: RegisterDto) {
 		const newUser = await this.usersRepository.create(userData);
 		await this.usersRepository.save(newUser);
 		return newUser;
 	}
 
-	async addAvatar(userId: number, imageBuffer: Buffer, filename: string) {
-		const user = await this.getById(userId);
-		const fileId = user.avatar?.id;
+	public async addAvatar(
+		userId: number,
+		imageBuffer: Buffer,
+		filename: string,
+	): Promise<PublicFile> {
+		const user: User = await this.getById(userId);
+		const fileId: number = user.avatar?.id;
 
 		if (fileId) {
 			await this.usersRepository.update(userId, {
@@ -73,7 +79,7 @@ export class UsersService {
 		return avatar;
 	}
 
-	async deleteAvatar(userId: number) {
+	public async deleteAvatar(userId: number): Promise<void> {
 		const user = await this.getById(userId);
 		const fileId = user.avatar?.id;
 		if (fileId) {
@@ -85,7 +91,11 @@ export class UsersService {
 		}
 	}
 
-	async addPrivateFile(userId: number, imageBuffer: Buffer, filename: string) {
+	public async addPrivateFile(
+		userId: number,
+		imageBuffer: Buffer,
+		filename: string,
+	): Promise<PrivateFile> {
 		return this.privateFilesService.uploadPrivateFile(
 			imageBuffer,
 			userId,
@@ -102,7 +112,16 @@ export class UsersService {
 		throw new UnauthorizedException();
 	}
 
-	public async getAllPrivateFiles(userId: number) {
+	public async getAllPrivateFiles(
+		userId: number,
+	): Promise<
+		{
+			url: string; // type of file (PrivateFile) + url (string)
+			id: number;
+			key: string;
+			owner: User;
+		}[]
+	> {
 		const userWithFiles = await this.usersRepository.findOne(
 			{ id: userId },
 			{ relations: ["files"] },

@@ -15,7 +15,7 @@ import PrivateFile from "src/privateFiles/privateFile.entity";
 @Entity()
 class User {
 	// This constructor is made for e2e tests, so these can return an instance of a class with given user data inside
-	constructor(obj?: Partial<User>) {
+	public constructor(obj?: Partial<User>) {
 		Object.assign(this, obj);
 	}
 
