@@ -13,6 +13,7 @@ import PrivateFile from "src/privateFiles/privateFile.entity";
 import RegisterDto from "src/users/dto/register.dto";
 import { FilesService } from "src/files/files.service";
 import { PrivateFilesService } from "src/privateFiles/privateFiles.service";
+import { Readable } from "typeorm/platform/PlatformTools";
 
 @Injectable()
 export class UsersService {
@@ -45,7 +46,7 @@ export class UsersService {
 		);
 	}
 
-	public async create(userData: RegisterDto) {
+	public async create(userData: RegisterDto): Promise<User> {
 		const newUser = await this.usersRepository.create(userData);
 		await this.usersRepository.save(newUser);
 		return newUser;
@@ -103,7 +104,10 @@ export class UsersService {
 		);
 	}
 
-	public async getPrivateFile(userId: number, fileId: number) {
+	public async getPrivateFile(
+		userId: number,
+		fileId: number,
+	): Promise<{ stream: Readable; info: PrivateFile }> {
 		const file = await this.privateFilesService.getPrivateFile(fileId);
 		if (file.info.owner.id === userId) {
 			return file;
@@ -114,22 +118,15 @@ export class UsersService {
 
 	public async getAllPrivateFiles(
 		userId: number,
-	): Promise<
-		{
-			url: string; // type of file (PrivateFile) + url (string)
-			id: number;
-			key: string;
-			owner: User;
-		}[]
-	> {
-		const userWithFiles = await this.usersRepository.findOne(
+	): Promise<({ url: string } & PrivateFile)[]> {
+		const userWithFiles: User = await this.usersRepository.findOne(
 			{ id: userId },
 			{ relations: ["files"] },
 		);
 		if (userWithFiles) {
 			return Promise.all(
-				userWithFiles.files.map(async (file) => {
-					const url = await this.privateFilesService.generatePresignedUrl(
+				userWithFiles.files.map(async (file: PrivateFile) => {
+					const url: string = await this.privateFilesService.generatePresignedUrl(
 						file.key,
 					);
 

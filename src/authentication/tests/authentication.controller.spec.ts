@@ -84,7 +84,7 @@ describe("The AuthenticationController", () => {
 		app.useGlobalPipes(new ValidationPipe()); // enables class-transform decorators (for validation) @IsString, @MaxLength etc. to work everywhere
 		app.useGlobalInterceptors(
 			new ClassSerializerInterceptor(app.get(Reflector)),
-		); // not working - @Exclude not working in the entities during the tests
+		); // not enough to work - @Exclude not working in the entities during the tests
 		await app.init();
 	});
 

@@ -18,18 +18,8 @@ module.exports = {
 	},
 	rules: {
 		"no-console": "warn",
-		"@typescript-eslint/explicit-function-return-type": ["warn"],
 		"@typescript-eslint/explicit-module-boundary-types": "off",
-		"@typescript-eslint/no-explicit-any": ["error", { ignoreRestArgs: true }],
-		"@typescript-eslint/explicit-member-accessibility": ["error"],
-		"@typescript-eslint/typedef": [
-			"warn",
-			{
-				parameter: true,
-				propertyDeclaration: true,
-				variableDeclaration: true,
-			},
-		],
+		"@typescript-eslint/no-explicit-any": ["warn", { ignoreRestArgs: true }],
 	},
 	ignorePatterns: [".eslintrc.js"],
 };
