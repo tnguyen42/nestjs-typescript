@@ -12,6 +12,7 @@ import {
 	UseFilters,
 	UseGuards,
 	Req,
+	Query,
 } from "@nestjs/common";
 import { JwtAuthenticationGuard } from "../authentication/jwt-authentication.guard";
 import { ExceptionsLoggerFilter } from "../utils/exceptionsLogger.filter";
@@ -24,8 +25,14 @@ import RequestWithUser from "../authentication/requestWithUser.interface";
 export default class PostsController {
 	constructor(private readonly postsService: PostsService) {}
 
+	/**
+	 * Gets posts with a search query
+	 */
 	@Get()
-	getAllPosts() {
+	getPosts(@Query("search") search: string) {
+		if (search) {
+			return this.postsService.searchForPosts(search);
+		}
 		return this.postsService.getAllPosts();
 	}
 
